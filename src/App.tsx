@@ -25,7 +25,7 @@ function App() {
       sidebar={
         <div className="space-y-2">
           {/* Mock User List */}
-          {['Sarah Chen', 'Mike Ross', 'Jessica Pearson'].map((user, i) => (
+          {['Sarah Chen', 'Mike Ross', 'Jessica'].map((user, i) => (
             <div key={i} className={`p-3 rounded-xl border cursor-pointer transition-all hover:bg-white/5 flex items-center gap-3 ${i === 0 ? 'bg-primary/10 border-primary/30' : 'bg-transparent border-transparent'}`}>
               <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-gray-700 to-gray-600 flex items-center justify-center text-xs font-bold">
                 {user.charAt(0)}

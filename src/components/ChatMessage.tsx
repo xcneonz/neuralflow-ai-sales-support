@@ -22,14 +22,12 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, isTypin
         isAi ? "justify-start" : "justify-end"
       )}
     >
-      {/* AI Avatar (Only shows for AI) */}
       {isAi && (
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-purple-600 flex items-center justify-center shadow-lg shadow-accent/20">
           <Bot className="w-6 h-6 text-white" />
         </div>
       )}
 
-      {/* The Bubble */}
       <div className={clsx(
         "max-w-[70%] p-4 rounded-2xl shadow-md relative overflow-hidden backdrop-blur-sm",
         isAi 
@@ -37,7 +35,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, isTypin
           : "bg-gradient-to-r from-primary to-blue-600 text-white rounded-tr-none shadow-blue-500/20"
       )}>
         
-        {/* Decorative "Sparkle" for AI messages */}
         {isAi && <Sparkles className="absolute top-2 right-2 w-3 h-3 text-accent/50 animate-pulse" />}
 
         {isTyping ? (
@@ -53,7 +50,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, isTypin
         )}
       </div>
 
-      {/* User Avatar (Only shows for User) */}
+      {/* User Avatar */}
       {!isAi && (
         <div className="w-10 h-10 rounded-xl bg-surface border border-white/10 flex items-center justify-center">
           <User className="w-5 h-5 text-muted" />

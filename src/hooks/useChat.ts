@@ -11,13 +11,12 @@ export const useChat = () => {
     { 
       id: '1', 
       role: 'assistant', 
-      content: 'Hello! I am NeuralFlow. How can I help you today?'  //change this initial message later
+      content: 'Hello! I am Aeonza. How can I help you today?'
     }
   ]);
   const [isTyping, setIsTyping] = useState(false);
 
   const sendMessage = async (text: string) => {
-    // 1. Add User Message
     const userMsg: Message = { id: Date.now().toString(), role: 'user', content: text };
     setMessages(prev => [...prev, userMsg]);
     

@@ -3,12 +3,16 @@
 @tailwind utilities;
 
 :root {
+
   background-color: #0f172a;
   color: #f8fafc;
+
 }
 
 body {
+
   font-family: 'Inter', sans-serif;
   height: 100vh;
   overflow: hidden;
+  
 }
