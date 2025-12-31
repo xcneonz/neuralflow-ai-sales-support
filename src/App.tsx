@@ -73,7 +73,7 @@ function App() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message to NeuralFlow..."
+              placeholder="Type your message to Aeonza..."
               className="w-full bg-surface/50 border border-white/10 rounded-2xl py-4 pl-6 pr-14 text-white placeholder:text-muted focus:outline-none focus:border-accent/50 focus:bg-surface/80 transition-all shadow-lg"
             />
             <button 
@@ -85,7 +85,7 @@ function App() {
             </button>
           </form>
           <div className="text-center mt-2">
-            <p className="text-[10px] text-muted uppercase tracking-widest opacity-50">Powered by NeuralFlow v1.0</p>
+            <p className="text-[10px] text-muted uppercase tracking-widest opacity-50">Powered by Aeonza v1.0</p>
           </div>
         </div>
       </div>

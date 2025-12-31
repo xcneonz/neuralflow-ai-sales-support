@@ -14,7 +14,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, sidebar, detailsPanel 
       <aside className="w-80 h-full border-r border-surface bg-surface/30 backdrop-blur-md flex flex-col">
         <div className="p-4 border-b border-white/5">
           <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            NeuralFlow
+            AEONZA
           </h1>
           <p className="text-xs text-muted uppercase tracking-wider mt-1">AI Orchestrator</p>
         </div>
