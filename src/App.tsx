@@ -2,22 +2,26 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import { ChatMessage } from './components/ChatMessage';
 import { useChat } from './hooks/useChat';
-import { Send, Activity, Users, Zap } from 'lucide-react';
+import { Send, Activity, Users, Zap, Calendar } from 'lucide-react';
 
 function App() {
-  const { messages, sendMessage, isTyping } = useChat();
+  const { messages, sendMessage, isTyping, showBookingBtn } = useChat();
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+  }, [messages, isTyping, showBookingBtn]); 
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
     sendMessage(input);
     setInput('');
+  };
+
+  const handleBooking = () => {
+    alert("✅ Booking Triggered! (Email workflow coming next)");
   };
 
   return (
@@ -40,7 +44,6 @@ function App() {
       }
       detailsPanel={
         <div className="space-y-6">
-          {/* Live Lead Score Card */}
           <div className="p-5 rounded-2xl bg-gradient-to-b from-surface to-background border border-white/5 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-40 transition-opacity">
               <Zap className="w-12 h-12 text-accent" />
@@ -54,18 +57,36 @@ function App() {
         </div>
       }
     >
-      {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-6 scroll-smooth">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto space-y-4">
           {messages.map((msg) => (
             <ChatMessage key={msg.id} role={msg.role} content={msg.content} />
           ))}
+          
           {isTyping && <ChatMessage role="assistant" content="" isTyping={true} />}
+          
+          {showBookingBtn && (
+            <div className="flex justify-center py-4 animate-fade-in-up">
+              <button 
+                onClick={handleBooking}
+                className="group relative flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-full shadow-[0_0_20px_rgba(37,99,235,0.5)] transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(37,99,235,0.7)]"
+              >
+                <Calendar className="w-5 h-5" />
+                <span>Book Appointment Now</span>
+                
+             
+                <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+                </span>
+              </button>
+            </div>
+          )}
+
           <div ref={messagesEndRef} />
         </div>
       </div>
 
-      {/* Input Area */}
       <div className="p-6 bg-background/50 backdrop-blur-md border-t border-white/5">
         <div className="max-w-3xl mx-auto">
           <form onSubmit={handleSend} className="relative group">
