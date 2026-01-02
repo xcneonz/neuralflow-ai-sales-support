@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import { ChatMessage } from './components/ChatMessage';
 import { useChat, type Message } from './hooks/useChat';
-import { bookAppointment } from './services/api';
+import { bookAppointment, analyzeSentiment, scoreLead } from './services/api';
 import { Send, Activity, Zap, Calendar, CheckCircle, Clock, MapPin } from 'lucide-react';
 
 function App() {
@@ -11,6 +11,7 @@ function App() {
 
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages, isTyping, showBookingBtn, bookingConfirmed]);
@@ -18,7 +19,25 @@ function App() {
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
+
+    // 1. Send to Main Chat
     sendMessage(input);
+
+    // 2. Trigger Sentiment Analysis (Background)
+    analyzeSentiment(input).then(result => {
+      if (result.sentiment === 'NEGATIVE') {
+        console.warn("⚠️ ALERT: User seems angry/frustrated!", result);
+      } else {
+        console.log("Sentiment Analysis:", result);
+      }
+    });
+
+    // 3. Trigger Lead Scoring (Demo Context: Sarah Chen)
+    // We send the current message to see if it increases the score
+    scoreLead("Sarah Chen", "VP of Sales", "TechCorp", input).then(scoreResult => {
+      console.log("📊 Live Lead Score Update:", scoreResult);
+    });
+
     setInput('');
   };
 
