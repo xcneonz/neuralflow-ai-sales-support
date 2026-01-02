@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import { ChatMessage } from './components/ChatMessage';
 import { useChat } from './hooks/useChat';
-import { Send, Activity, Users, Zap, Calendar } from 'lucide-react';
 import { bookAppointment } from './services/api';
+import { Send, Activity, Users, Zap, Calendar } from 'lucide-react';
 
 function App() {
   const { messages, sendMessage, isTyping, showBookingBtn } = useChat();
