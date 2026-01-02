@@ -76,7 +76,7 @@ function App() {
             </div>
           ) : (
             // STATE B: appointment confirmeation
-            <div className="p-5 rounded-2xl bg-gradient-to-b from-blue-900/20 to-background border border-blue-500/30 animate-fade-in-up">
+             <div className="p-5 rounded-2xl bg-gradient-to-b from-blue-900/20 to-background border border-blue-500/30 animate-fade-in-up">
               <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                 <CheckCircle className="w-4 h-4" /> Appointment Confirmed
               </h3>
@@ -84,7 +84,17 @@ function App() {
               <div className="space-y-4">
                 <div className="space-y-1">
                   <div className="text-xs text-muted">Client Name</div>
-                  <div className="text-sm font-bold text-white">Guest User</div>
+                  <div className="text-sm font-bold text-white">Sarah Chen</div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="text-xs text-muted">Email</div>
+                  <div className="text-sm text-white">sarah@company.com</div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="text-xs text-muted">Requirement</div>
+                  <div className="text-sm text-white italic">"Enterprise Plan Demo"</div>
                 </div>
                 
                 <div className="space-y-1">
