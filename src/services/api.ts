@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 const N8N_CHAT_URL = "http://localhost:5678/webhook-test/intent";
-
-const N8N_BOOKING_URL = " "; 
+const N8N_BOOKING_URL = "http://localhost:5678/webhook-test/send-appointment"; 
 
 export interface AIResponse {
   reply: string;
