@@ -1,18 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import { ChatMessage } from './components/ChatMessage';
-import { useChat } from './hooks/useChat';
+import { useChat, Message } from './hooks/useChat'; // Import Message type
 import { bookAppointment } from './services/api';
-import { Send, Activity, Users, Zap, Calendar } from 'lucide-react';
+import { Send, Activity, Users, Zap, Calendar, CheckCircle, Clock, MapPin } from 'lucide-react';
 
 function App() {
-  const { messages, sendMessage, isTyping, showBookingBtn, leadScore } = useChat();
+  const { messages: chatMessages, sendMessage, isTyping, showBookingBtn, leadScore } = useChat();
+  
+  const [localMessages, setLocalMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [bookingConfirmed, setBookingConfirmed] = useState(false); 
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setLocalMessages(chatMessages);
+  }, [chatMessages]);
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping, showBookingBtn]); 
+  }, [localMessages, isTyping, showBookingBtn, bookingConfirmed]);
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,11 +31,17 @@ function App() {
 
   const handleBooking = async () => {
     try {
-      alert("Contacting Server...");
-      await bookAppointment("test-user@gmail.com"); 
-      alert("EMAIL SENT!");
+      await bookAppointment("user@example.com"); 
+      const systemMsg: Message = {
+        id: Date.now().toString(),
+        role: 'assistant', 
+        content: "✅ Booking Confirmed – A confirmation email has been sent to your inbox."
+      };
+      setLocalMessages(prev => [...prev, systemMsg]);
+      setBookingConfirmed(true);
+      
     } catch (error) {
-      alert("Error: " + error);
+      alert("❌ Booking Failed. Check n8n console.");
     }
   };
 
@@ -49,32 +63,68 @@ function App() {
         </div>
       }
       detailsPanel={
+        // Showing the user info and appointment Details
         <div className="space-y-6">
-          <div className="p-5 rounded-2xl bg-gradient-to-b from-surface to-background border border-white/5 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-40 transition-opacity">
-              <Zap className="w-12 h-12 text-accent" />
+          {!bookingConfirmed ? (
+            <div className="p-5 rounded-2xl bg-gradient-to-b from-surface to-background border border-white/5 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-40 transition-opacity">
+                <Zap className="w-12 h-12 text-accent" />
+              </div>
+              <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Lead Probability</h3>
+              <div className={`text-4xl font-bold mb-1 transition-all duration-1000 ${leadScore > 70 ? 'text-green-400' : 'text-white'}`}>
+                {leadScore}%
+              </div>
+              <div className="text-xs text-muted flex items-center gap-1">
+                <Activity className="w-3 h-3" /> 
+                {leadScore > 50 ? 'High Intent Detected' : 'Analyzing User...'}
+              </div>
             </div>
-            <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Lead Probability</h3>
-            <div className={`text-4xl font-bold mb-1 transition-all duration-1000 ${leadScore > 70 ? 'text-green-400' : 'text-white'}`}>
-              {leadScore}%
+          ) : (
+            <div className="p-5 rounded-2xl bg-gradient-to-b from-blue-900/20 to-background border border-blue-500/30 animate-fade-in-up">
+              <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <CheckCircle className="w-4 h-4" /> Appointment Confirmed
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <div className="text-xs text-muted">Client Name</div>
+                  <div className="text-sm font-bold text-white">Guest User</div>
+                </div>
+                
+                <div className="space-y-1">
+                  <div className="text-xs text-muted">Time</div>
+                  <div className="flex items-center gap-2 text-sm text-white">
+                    <Clock className="w-4 h-4 text-accent" />
+                    <span>Today, 4:00 PM</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="text-xs text-muted">Location</div>
+                  <div className="flex items-center gap-2 text-sm text-white">
+                    <MapPin className="w-4 h-4 text-accent" />
+                    <span>Google Meet</span>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-white/10">
+                  <div className="text-xs text-green-400">Email sent successfully</div>
+                </div>
+              </div>
             </div>
-            <div className="text-xs text-muted flex items-center gap-1">
-              <Activity className="w-3 h-3" /> 
-              {leadScore > 50 ? 'High Intent Detected' : 'Analyzing User...'}
-            </div>
-          </div>
+          )}
         </div>
       }
     >
       <div className="flex-1 overflow-y-auto p-6 scroll-smooth">
         <div className="max-w-3xl mx-auto space-y-4">
-          {messages.map((msg) => (
+          {localMessages.map((msg) => (
             <ChatMessage key={msg.id} role={msg.role} content={msg.content} />
           ))}
           
           {isTyping && <ChatMessage role="assistant" content="" isTyping={true} />}
           
-          {showBookingBtn && (
+          {showBookingBtn && !bookingConfirmed && (
             <div className="flex justify-center py-4 animate-fade-in-up">
               <button 
                 onClick={handleBooking}
@@ -82,8 +132,6 @@ function App() {
               >
                 <Calendar className="w-5 h-5" />
                 <span>Book Appointment Now</span>
-                
-             
                 <span className="absolute -top-1 -right-1 flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
