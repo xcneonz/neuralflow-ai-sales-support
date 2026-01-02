@@ -12,8 +12,8 @@ export const useChat = () => {
     { id: '1', role: 'assistant', content: 'Hello! I am Aeonza. How can I help you today?' }
   ]);
   const [isTyping, setIsTyping] = useState(false);
-  
   const [showBookingBtn, setShowBookingBtn] = useState(false);
+  const [leadScore, setLeadScore] = useState(15); 
 
   const sendMessage = async (text: string) => {
     const userMsg: Message = { id: Date.now().toString(), role: 'user', content: text };
@@ -22,6 +22,10 @@ export const useChat = () => {
 
     try {
       const data = await sendMessageToAeonza(text, { userId: '1' });
+
+      if (data.confidence) {
+        setLeadScore(Math.round(data.confidence * 100));
+      }
 
       if (data.intent === 'SALES') {
         setShowBookingBtn(true);
@@ -42,5 +46,5 @@ export const useChat = () => {
     }
   };
 
-  return { messages, sendMessage, isTyping, showBookingBtn };
+  return { messages, sendMessage, isTyping, showBookingBtn, leadScore };
 };
