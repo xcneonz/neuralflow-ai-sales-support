@@ -55,9 +55,12 @@ function App() {
               <Zap className="w-12 h-12 text-accent" />
             </div>
             <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Lead Probability</h3>
-            <div className="text-4xl font-bold text-white mb-1">85%</div>
-            <div className="text-xs text-green-400 flex items-center gap-1">
-              <Activity className="w-3 h-3" /> Trending Up
+            <div className={`text-4xl font-bold mb-1 transition-all duration-1000 ${leadScore > 70 ? 'text-green-400' : 'text-white'}`}>
+              {leadScore}%
+            </div>
+            <div className="text-xs text-muted flex items-center gap-1">
+              <Activity className="w-3 h-3" /> 
+              {leadScore > 50 ? 'High Intent Detected' : 'Analyzing User...'}
             </div>
           </div>
         </div>
