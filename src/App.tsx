@@ -29,13 +29,13 @@ function App() {
       const systemMsg: Message = {
         id: Date.now().toString(),
         role: 'system', 
-        content: "✅ Booking Confirmed – A confirmation email has been sent to your inbox."
+        content: "Booking Confirmed – A confirmation email has been sent to your inbox."
       };
       setMessages(prev => [...prev, systemMsg]);
       setBookingConfirmed(true);
       
     } catch (error) {
-      alert("❌ Booking Failed. Check n8n console.");
+      alert("Booking Failed. Check n8n console.");
       console.error(error);
     }
   };
