@@ -11,7 +11,7 @@ function App() {
 
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages, isTyping, showBookingBtn, bookingConfirmed]);
@@ -20,20 +20,14 @@ function App() {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // 1. Send to Main Chat
     sendMessage(input);
 
-    // 2. Trigger Sentiment Analysis (Background)
     analyzeSentiment(input).then(result => {
       if (result.sentiment === 'NEGATIVE') {
-        console.warn("⚠️ ALERT: User seems angry/frustrated!", result);
-      } else {
-        console.log("Sentiment Analysis:", result);
+        console.warn("ALERT: User seems angry/frustrated!", result);
       }
     });
 
-    // 3. Trigger Lead Scoring (Demo Context: Sarah Chen)
-    // We send the current message to see if it increases the score
     scoreLead("Sarah Chen", "VP of Sales", "TechCorp", input).then(scoreResult => {
       console.log("📊 Live Lead Score Update:", scoreResult);
     });
@@ -94,7 +88,7 @@ function App() {
               </div>
             </div>
           ) : (
-            // STATE B: appointment confirmeation
+            // STATE B: appointment confirmation
              <div className="p-5 rounded-2xl bg-gradient-to-b from-blue-900/20 to-background border border-blue-500/30 animate-fade-in-up">
               <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                 <CheckCircle className="w-4 h-4" /> Appointment Confirmed
