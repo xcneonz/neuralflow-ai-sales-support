@@ -3,6 +3,7 @@ import { Layout } from './components/Layout';
 import { ChatMessage } from './components/ChatMessage';
 import { useChat } from './hooks/useChat';
 import { Send, Activity, Users, Zap, Calendar } from 'lucide-react';
+import { bookAppointment } from './services/api';
 
 function App() {
   const { messages, sendMessage, isTyping, showBookingBtn } = useChat();
@@ -20,8 +21,14 @@ function App() {
     setInput('');
   };
 
-  const handleBooking = () => {
-    alert("✅ Booking Triggered! (Email workflow coming next)");
+  const handleBooking = async () => {
+    try {
+      alert("Contacting Server...");
+      await bookAppointment("test-user@gmail.com"); 
+      alert("✅ EMAIL SENT!");
+    } catch (error) {
+      alert("❌ Error: " + error);
+    }
   };
 
   return (
