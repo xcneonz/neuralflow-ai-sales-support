@@ -1,26 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import { ChatMessage } from './components/ChatMessage';
-import { useChat, Message } from './hooks/useChat'; // Import Message type
+import { useChat, type Message } from './hooks/useChat';
 import { bookAppointment } from './services/api';
-import { Send, Activity, Users, Zap, Calendar, CheckCircle, Clock, MapPin } from 'lucide-react';
+import { Send, Activity, Zap, Calendar, CheckCircle, Clock, MapPin } from 'lucide-react';
 
 function App() {
-  const { messages: chatMessages, sendMessage, isTyping, showBookingBtn, leadScore } = useChat();
-  
-  const [localMessages, setLocalMessages] = useState<Message[]>([]);
+  const { messages: chatMessages, setMessages, sendMessage, isTyping, showBookingBtn, leadScore } = useChat();
   const [input, setInput] = useState('');
-  const [bookingConfirmed, setBookingConfirmed] = useState(false); 
-  
+
+  const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setLocalMessages(chatMessages);
-  }, [chatMessages]);
-
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [localMessages, isTyping, showBookingBtn, bookingConfirmed]);
+  }, [chatMessages, isTyping, showBookingBtn, bookingConfirmed]);
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,17 +24,19 @@ function App() {
 
   const handleBooking = async () => {
     try {
-      await bookAppointment("user@example.com"); 
+      await bookAppointment("test-user@example.com"); 
+
       const systemMsg: Message = {
         id: Date.now().toString(),
-        role: 'assistant', 
+        role: 'system', 
         content: "✅ Booking Confirmed – A confirmation email has been sent to your inbox."
       };
-      setLocalMessages(prev => [...prev, systemMsg]);
+      setMessages(prev => [...prev, systemMsg]);
       setBookingConfirmed(true);
       
     } catch (error) {
       alert("❌ Booking Failed. Check n8n console.");
+      console.error(error);
     }
   };
 
@@ -63,9 +58,9 @@ function App() {
         </div>
       }
       detailsPanel={
-        // Showing the user info and appointment Details
         <div className="space-y-6">
           {!bookingConfirmed ? (
+            // STATE A: lead scoring
             <div className="p-5 rounded-2xl bg-gradient-to-b from-surface to-background border border-white/5 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-40 transition-opacity">
                 <Zap className="w-12 h-12 text-accent" />
@@ -80,6 +75,7 @@ function App() {
               </div>
             </div>
           ) : (
+            // STATE B: appointment confirmeation
             <div className="p-5 rounded-2xl bg-gradient-to-b from-blue-900/20 to-background border border-blue-500/30 animate-fade-in-up">
               <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                 <CheckCircle className="w-4 h-4" /> Appointment Confirmed
@@ -108,7 +104,7 @@ function App() {
                 </div>
 
                 <div className="pt-2 border-t border-white/10">
-                  <div className="text-xs text-green-400">Email sent successfully</div>
+                  <div className="text-xs text-green-400">Confirmation email sent.</div>
                 </div>
               </div>
             </div>
@@ -118,12 +114,11 @@ function App() {
     >
       <div className="flex-1 overflow-y-auto p-6 scroll-smooth">
         <div className="max-w-3xl mx-auto space-y-4">
-          {localMessages.map((msg) => (
-            <ChatMessage key={msg.id} role={msg.role} content={msg.content} />
+          {chatMessages.map((msg) => (
+            <ChatMessage key={msg.id} role={msg.role as any} content={msg.content} />
           ))}
           
           {isTyping && <ChatMessage role="assistant" content="" isTyping={true} />}
-          
           {showBookingBtn && !bookingConfirmed && (
             <div className="flex justify-center py-4 animate-fade-in-up">
               <button 
